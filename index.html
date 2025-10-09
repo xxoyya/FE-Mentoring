@@ -1,10 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TODO</title>
+
+    <!-- Josefin Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- Hero (gradient + bg image) -->
+<header class="hero">
+    <img class="hero__bg" alt="">
+    <div class="hero__overlay"></div>
+    <div class="hero__bar container">
+        <h1 class="logo" aria-label="TODO">TODO</h1>
+        <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+            <!-- moon/sun -->
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+    </div>
+</header>
 
+<main class="container">
+    <!-- 입력 -->
+    <form id="todoForm" class="newtodo">
+        <label class="checkbox">
+            <input type="checkbox" disabled>
+            <span class="check"></span>
+        </label>
+        <input id="newTodo" class="newtodo__input" type="text" placeholder="Create a new todo…" autocomplete="off" />
+        <button class="sr-only" type="submit">추가</button>
+    </form>
+
+    <!-- 카드 -->
+    <section class="card">
+        <ul id="todoList" class="todos" role="list">
+            <!-- JS가 렌더링 -->
+        </ul>
+
+        <!-- 툴바 -->
+        <div class="toolbar">
+            <span id="leftCount" class="muted">0 items left</span>
+
+            <div class="filters" role="tablist" aria-label="Filter todos">
+                <button class="filter is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+                <button class="filter" data-filter="active" role="tab" aria-selected="false">Active</button>
+                <button class="filter" data-filter="completed" role="tab" aria-selected="false">Completed</button>
+            </div>
+
+            <button id="clearCompleted" class="muted link-btn">Clear Completed</button>
+        </div>
+    </section>
+
+    <p class="hint muted">Drag and drop to reorder list</p>
+</main>
+
+<script src="script.js" defer></script>
 </body>
 </html>
