@@ -4,16 +4,16 @@ import './Modal.css';
 function Modal({ result, onRestart, onGoHome }) {
   if (!result) return null;
 
-  const message = result === 'Tie' ? "It's a Tie!" : `Player ${result} Wins!`;
+  const message = result === 'Tie' ? "무승부!" : `플레이어 ${result}가 이겼습니다!`;
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Game Over</h2>
+        <h2>게임 오버</h2>
         <p>{message}</p>
         <div className="modal-buttons">
-          <button onClick={onRestart}>Play Again</button>
-          <button onClick={onGoHome}>Go to Home</button>
+          <button onClick={onRestart}>다시 플레이</button>
+          <button onClick={onGoHome}>홈으로</button>
         </div>
       </div>
     </div>
