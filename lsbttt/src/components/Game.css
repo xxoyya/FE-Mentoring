@@ -1,0 +1,77 @@
+.game-container {
+  width: 100%;
+}
+
+.game-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  margin-bottom: 20px;
+  
+}
+
+.game-header img {
+  width: 72px;
+  height: 32px;
+}
+
+.turn-indicator {
+  justify-self: center;
+}
+
+.restart-button {
+  justify-self: end;
+  border: none;
+  border-radius: 10px;
+  width: 52px;
+  height: 52px;
+  cursor: pointer;
+
+  background-image: url('../assets/restart_main.png');
+  background-size: cover;
+  background-color: transparent; 
+  box-shadow: none;
+  transition: none;
+}
+
+.restart-button:hover {
+  background-image: url('../assets/restart_hover.png');
+}
+
+.score-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.score-box {
+  border-radius: 15px;
+  text-align: center;
+  padding: 13px 0;
+  color: var(--Dark-Navy);
+}
+
+.score-box h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.88px;
+}
+
+.score-box p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.x-score { background: var(--Light-Blue); }
+.ties-score { background: var(--Silver); }
+.o-score { background: var(--Light-Yellow); }
+
+.turn-indicator img {
+  width: 140px;
+  height: 52px;
+  object-fit: contain;
+}
