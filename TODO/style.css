@@ -55,6 +55,18 @@ body{
 [data-theme="dark"] .icon-btn:hover{background:rgba(255,255,255,.08)}
 .icon{width:24px;height:24px;fill:#fff}
 
+/* 아이콘 전환 */
+.icon--sun{ display:none; }
+[data-theme="dark"] .icon--moon{ display:none; }
+[data-theme="dark"] .icon--sun{ display:block; }
+
+/* 배경 더 보이게 + 여백 보정 */
+.hero{ height: 320px; }                 /* 300 → 320 (헤더 더 노출) */
+.hero__bg{ object-position: center 20%; } /* 산이 더 보이도록 위쪽으로 */
+.newtodo{ transform: translateY(-28px); } /* 입력창 겹침 미세 조정 */
+.card{   margin-top: -12px; }             /* 카드와 입력창 간격 */
+
+
 /* 입력 라인 */
 .newtodo{
     transform:translateY(-32px);
@@ -134,7 +146,7 @@ body{
 .filter:hover{color:var(--text)} /* (5) 버튼 hover */
 .filter.is-active{color:var(--blue);background:transparent}
 
-.hint{text-align:center;margin:24px 0}
+.hint{text-align:center;margin:54px 0}
 
 /* 버튼/링크 공통 hover 대비 (5) */
 button:hover,a:hover{filter:none}
@@ -143,4 +155,8 @@ button:hover,a:hover{filter:none}
 @media (max-width: 600px){
     .logo{font-size:32px;letter-spacing:10px}
     .toolbar{flex-direction:column;align-items:center}
+}
+
+main.container {
+    transform: translateY(-110px); /* ↑ 위로 60px 정도 */
 }
