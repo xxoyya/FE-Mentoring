@@ -1,23 +1,57 @@
 import React from 'react';
 import './Modal.css';
+import iconX from '../assets/icon_x.png';
+import iconO from '../assets/icon_o.png';
 
-function Modal({ result, onRestart, onGoHome }) {
-  if (!result) return null;
+const Modal = ({ type, winner, onQuit, onNextRound, onCancel, onConfirmRestart }) => {
+  const renderContent = () => {
+    switch (type) {
+      case 'winner':
+        return (
+          <>
+            <p className="modal-subtitle">PLAYER {winner} WINS!</p>
+            <div className={`winner-title ${winner === 'X' ? 'x-win' : 'o-win'}`}>
+              <img src={winner === 'X' ? iconX : iconO} alt={`${winner} icon`} />
+              <h1>TAKES THE ROUND</h1>
+            </div>
+          </>
+        );
+      case 'tie':
+        return <h1 className="tie-title">ROUND TIED</h1>;
+      case 'restart':
+        return <h1 className="restart-title">RESTART GAME?</h1>;
+      default:
+        return null;
+    }
+  };
 
-  const message = result === 'Tie' ? "무승부!" : `플레이어 ${result}가 이겼습니다!`;
+  const renderButtons = () => {
+    if (type === 'restart') {
+      return (
+        <>
+          <button className="modal-button quit-button" onClick={onCancel}>NO, CANCEL</button>
+          <button className="modal-button next-button" onClick={onConfirmRestart}>YES, RESTART</button>
+        </>
+      );
+    }
+    return (
+      <>
+        <button className="modal-button quit-button" onClick={onQuit}>QUIT</button>
+        <button className="modal-button next-button" onClick={onNextRound}>NEXT ROUND</button>
+      </>
+    );
+  };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>게임 오버</h2>
-        <p>{message}</p>
+        {renderContent()}
         <div className="modal-buttons">
-          <button onClick={onRestart}>다시 플레이</button>
-          <button onClick={onGoHome}>홈으로</button>
+          {renderButtons()}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Modal;
