@@ -1,159 +1,129 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Board from './Board';
 import Modal from './Modal';
+import { calculateWinner, findBestMove } from '../utils/gameLogic';
+
 import './Game.css';
+import logo from '../assets/Menu_ox.png';
+import restartIcon from '../assets/restart_main.png';
+import xTurnIcon from '../assets/x_turn.png';
+import oTurnIcon from '../assets/o_turn.png';
 
-const INITIAL_SQUARES = Array(9).fill(null);
-const INITIAL_SCORES = { X: 0, O: 0, Tie: 0 };
+const INITIAL_SCORES = { X: 0, O: 0, Ties: 0 };
 
-function Game({ gameMode, playerMark, onGoHome }) {
-  const [squares, setSquares] = useState(INITIAL_SQUARES);
-  const [xIsNext, setXIsNext] = useState(true);
+const Game = ({ gameMode, player1Mark, onQuit }) => {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [isXTurn, setIsXTurn] = useState(true);
   const [scores, setScores] = useState(INITIAL_SCORES);
-  const [gameResult, setGameResult] = useState(null);
+  const [modalInfo, setModalInfo] = useState({ show: false, type: '', winner: null });
 
-  const aiMark = playerMark === 'X' ? 'O' : 'X';
-  const isAiTurn = gameMode === 'pva' && (xIsNext ? 'X' === aiMark : 'O' === aiMark);
-  
-  const handlePlay = useCallback((newSquares) => {
-      setSquares(newSquares);
-      setXIsNext(prev => !prev);
+  const player2Mark = player1Mark === 'X' ? 'O' : 'X';
+  const isCpuTurn = gameMode === 'pva' && (isXTurn ? 'X' !== player1Mark : 'O' !== player1Mark);
+
+  const handleGameEnd = useCallback((winner) => {
+    setModalInfo({ show: true, type: winner ? 'winner' : 'tie', winner });
+    setScores(prev => ({
+      ...prev,
+      [winner || 'Ties']: prev[winner || 'Ties'] + 1
+    }));
   }, []);
 
   useEffect(() => {
     const winner = calculateWinner(squares);
-    const isBoardFull = squares.every(square => square !== null);
+    const isDraw = !winner && squares.every(Boolean);
 
-    if (winner) {
-      setGameResult(winner);
-      setScores(prevScores => ({...prevScores, [winner]: prevScores[winner] + 1 }));
-    } else if (isBoardFull) {
-      setGameResult('Tie');
-      setScores(prevScores => ({ ...prevScores, Tie: prevScores.Tie + 1 }));
-    } else if (isAiTurn) {
-        
-        const timeoutId = setTimeout(() => {
-            const bestMove = findBestMove(squares, aiMark);
-            const newSquares = squares.slice();
-            newSquares[bestMove] = aiMark;
-            handlePlay(newSquares);
-        }, 500); // !딜레이 조절하는곳!
-        return () => clearTimeout(timeoutId);
-    }
-  }, [squares, isAiTurn, aiMark, handlePlay]);
-
-
-  const handleSquareClick = (i) => {
-    if (squares[i] || calculateWinner(squares) || isAiTurn) {
+    if (winner || isDraw) {
+      setTimeout(() => handleGameEnd(winner), 500);
       return;
     }
-    const newSquares = squares.slice();
-    newSquares[i] = xIsNext ? 'X' : 'O';
-    handlePlay(newSquares);
+
+    if (isCpuTurn) {
+      const cpuMark = isXTurn ? 'X' : 'O';
+      const timeoutId = setTimeout(() => {
+        const bestMove = findBestMove(squares, cpuMark);
+        if (bestMove !== null) {
+          const newSquares = [...squares];
+          newSquares[bestMove] = cpuMark;
+          setSquares(newSquares);
+          setIsXTurn(prev => !prev);
+        }
+      }, 700);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [squares, isCpuTurn, handleGameEnd]);
+
+  const handleSquareClick = (index) => {
+    if (squares[index] || calculateWinner(squares) || isCpuTurn) return;
+
+    const newSquares = [...squares];
+    newSquares[index] = isXTurn ? 'X' : 'O';
+    setSquares(newSquares);
+    setIsXTurn(!isXTurn);
+  };
+
+  const handleNextRound = () => {
+    setSquares(Array(9).fill(null));
+    setIsXTurn(true);
+    setModalInfo({ show: false, type: '', winner: null });
   };
   
-  const resetGame = (keepScores = false) => {
-    setSquares(INITIAL_SQUARES);
-    setXIsNext(true);
-    setGameResult(null);
-    if (!keepScores) {
-      setScores(INITIAL_SCORES);
-    }
+  const openRestartModal = () => {
+    setModalInfo({ show: true, type: 'restart' });
+  };
+  
+  const closeRestartModal = () => {
+    setModalInfo({ show: false, type: '' });
   };
 
-  const handlePlayAgain = () => {
-    resetGame(true);
-  }
-
-  let status;
-  const winner = calculateWinner(squares);
-  if (winner) {
-    status = `승리: ${winner}`;
-  } else if (squares.every(s => s)) {
-    status = "결과: 무승부";
-  } else {
-    status = `현재 순서: ${xIsNext ? 'X' : 'O'}`;
-  }
+  const confirmRestart = () => {
+    handleNextRound();
+    setScores(INITIAL_SCORES);
+  };
 
   return (
-    <div className="game">
-      <div className="game-board">
-        <Board
-          squares={squares}
-          onClick={handleSquareClick}
-          xIsNext={xIsNext}
-          gameResult={gameResult}
+    <>
+      <div className="game-container">
+        <header className="game-header">
+          <img src={logo} alt="Logo" />
+          <div className="turn-indicator">
+            <img src={isXTurn ? xTurnIcon : oTurnIcon} alt={`${isXTurn ? 'X' : 'O'}'s turn`} />
+          </div>
+            <button 
+              className="restart-button" 
+              onClick={openRestartModal} 
+              aria-label="Restart Game"
+            ></button>
+        </header>
+
+        <Board squares={squares} onSquareClick={handleSquareClick} currentTurn={isXTurn ? 'X' : 'O'} />
+
+        <footer className="score-board">
+          <div className="score-box x-score">
+            <h3>X ({gameMode === 'pvp' ? 'P1' : (player1Mark === 'X' ? 'YOU' : 'CPU')})</h3>
+            <p>{scores.X}</p>
+          </div>
+          <div className="score-box ties-score">
+            <h3>TIES</h3>
+            <p>{scores.Ties}</p>
+          </div>
+          <div className="score-box o-score">
+            <h3>O ({gameMode === 'pvp' ? 'P2' : (player1Mark === 'O' ? 'YOU' : 'CPU')})</h3>
+            <p>{scores.O}</p>
+          </div>
+        </footer>
+      </div>
+      {modalInfo.show && (
+        <Modal
+          type={modalInfo.type}
+          winner={modalInfo.winner}
+          onQuit={onQuit}
+          onNextRound={handleNextRound}
+          onCancel={closeRestartModal}
+          onConfirmRestart={confirmRestart}
         />
-      </div>
-      <div className="game-info">
-        <div className="status">{status}</div>
-        <button onClick={() => resetGame(false)}>게임 및 스코어 초기화</button>
-      </div>
-      <div className="score-board">
-        <span>O 승리: {scores.O}</span>
-        <span>무승부: {scores.Tie}</span>
-        <span>X 승리: {scores.X}</span>
-      </div>
-      <Modal 
-        result={gameResult} 
-        onRestart={handlePlayAgain}
-        onGoHome={onGoHome}
-      />
-    </div>
+      )}
+    </>
   );
-}
-
-
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6],
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
-
-function findBestMove(squares, aiMark) {
-    const opponentMark = aiMark === 'X' ? 'O' : 'X';
-
-    for (let i = 0; i < 9; i++) {
-        if (!squares[i]) {
-            const tempSquares = squares.slice();
-            tempSquares[i] = aiMark;
-            if (calculateWinner(tempSquares) === aiMark) return i;
-        }
-    }
-
-    for (let i = 0; i < 9; i++) {
-        if (!squares[i]) {
-            const tempSquares = squares.slice();
-            tempSquares[i] = opponentMark;
-            if (calculateWinner(tempSquares) === opponentMark) return i;
-        }
-    }
-
-    if (!squares[4]) return 4;
-
-    const corners = [0, 2, 6, 8];
-    const availableCorners = corners.filter(i => !squares[i]);
-    if (availableCorners.length > 0) {
-        return availableCorners[Math.floor(Math.random() * availableCorners.length)];
-    }
-
-    const sides = [1, 3, 5, 7];
-    const availableSides = sides.filter(i => !squares[i]);
-    if (availableSides.length > 0) {
-        return availableSides[Math.floor(Math.random() * availableSides.length)];
-    }
-
-    return null;
-}
-
+};
 
 export default Game;
