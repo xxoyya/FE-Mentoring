@@ -1,0 +1,21 @@
+.square {
+  aspect-ratio: 1 / 1;
+  border-radius: 15px;
+  background: var(--Semi-Dark-Navy);
+  box-shadow: 0px -8px 0px 0px var(--Shadow-Dark) inset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.square:hover {
+  /* 호버효과 넣는곳, 일단은 보류*/
+}
+
+.symbol, .hover-symbol {
+  width: 60%;
+  height: 60%;
+  user-select: none;
+}

@@ -1,0 +1,88 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  width: 100%;
+  height: 266px;
+  background: var(--Semi-Dark-Navy);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.modal-subtitle {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--Silver);
+  margin: 0;
+}
+
+.winner-title {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.winner-title img {
+  width: 64px;
+  height: 64px;
+}
+.winner-title h1 {
+  font-size: 40px;
+  letter-spacing: 2.5px;
+  margin: 0;
+}
+
+.x-win h1 { color: var(--Light-Blue); }
+.o-win h1 { color: var(--Light-Yellow); }
+
+.tie-title, .restart-title {
+  color: var(--Silver);
+  font-size: 40px;
+  letter-spacing: 2.5px;
+  margin: 0;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.modal-button {
+  border: none;
+  border-radius: 10px;
+  padding: 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.quit-button {
+  background: var(--Silver);
+  box-shadow: 0px -4px 0px 0px var(--Shadow-Silver) inset;
+}
+.quit-button:hover {
+  background: var(--silver-hover);
+}
+
+.next-button {
+  background: var(--Light-Yellow);
+  box-shadow: 0px -4px 0px 0px var(--Shadow-Yellow) inset;
+}
+.next-button:hover {
+  background: var(--light-yellow-hover);
+}
