@@ -182,7 +182,7 @@ export default function StartScreen({
             {/* 🔽 카드 밖, 선택바와 같은 너비(INNER_WIDTH)를 가진 버튼 그룹 */}
             <div
                 style={{
-                    width: CARD_WIDTH + 50,
+                    width: CARD_WIDTH,
                     display: "flex",
                     flexDirection: "column",
                     gap: 20,
