@@ -16,9 +16,9 @@ import RedoIcon from "../assets/redo.png";
 
 export default function GameScreen({
                                        mode,             // "cpu" | "pvp"
-                                       playerMark,       // "X" | "O"  (플레이어1 마크)
+                                       playerMark,       // "X" | "O"
                                        board,            // [9]
-                                       turn,             // 현재 턴 "X" | "O"
+                                       turn,             // "X" | "O"
                                        scores,           // { X, O, ties }
                                        onCellClick,
                                        onRestartClick,
@@ -50,6 +50,8 @@ export default function GameScreen({
 
     // --------- 스타일 공통 ---------
     const cellSize = 140;
+    const boardGap = 20;
+    const boardWidth = cellSize * 3 + boardGap * 2; // 3칸 + 양쪽 gap
 
     const cellStyle = {
         width: cellSize,
@@ -71,11 +73,19 @@ export default function GameScreen({
         color: "#A8BFC9",
     };
 
-    const buttonTextStyle = {
+    const scoreLabelStyle = {
         fontFamily: "Outfit, system-ui, sans-serif",
+        fontSize: 14,
+        fontWeight: 400,
+        letterSpacing: "0.88px",
+        color: "#1A2A33",
+    };
+
+    const scoreNumberStyle = {
+        fontFamily: "Outfit, system-ui, sans-serif",
+        fontSize: 24,
         fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "1px",
+        letterSpacing: "1.5px",
         color: "#1A2A33",
     };
 
@@ -86,15 +96,15 @@ export default function GameScreen({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 32,              // 전체 간격 줄이기 (기존 24 → 32로 통일)
-                marginTop: -40,        // 화면 중앙이 아니라 위쪽으로 올리기
+                gap: 32,
+                marginTop: -40,
             }}
         >
-
-        {/* 헤더 : 로고 / TURN / 다시하기 */}
+            {/* 헤더 : 로고 / TURN / 다시하기 */}
             <div
                 style={{
-                    width: "100%",
+                    width: boardWidth,          // 보드랑 같은 폭
+                    margin: "0 auto",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -172,12 +182,11 @@ export default function GameScreen({
                 style={{
                     display: "grid",
                     gridTemplateColumns: `repeat(3, ${cellSize}px)`,
-                    gap: 20,
-                    marginTop: 4,      // 기존 8 → 4 로 줄임
+                    gap: boardGap,
+                    marginTop: 4,
                     marginBottom: 4,
                 }}
             >
-
                 {board.map((cell, index) => {
                     // 이 칸에 실제로 보여줄 아이콘 결정
                     let iconSrc = null;
@@ -202,12 +211,8 @@ export default function GameScreen({
                                 ...cellStyle,
                                 cursor: isClickable ? "pointer" : "default",
                             }}
-                            onClick={() =>
-                                isClickable && onCellClick(index)
-                            }
-                            onMouseEnter={() =>
-                                setHoverIndex(index)
-                            }
+                            onClick={() => isClickable && onCellClick(index)}
+                            onMouseEnter={() => setHoverIndex(index)}
                             onMouseLeave={() => setHoverIndex(null)}
                         >
                             {iconSrc && (
@@ -229,13 +234,12 @@ export default function GameScreen({
             {/* 점수판 */}
             <div
                 style={{
-                    width: "100%",
+                    width: boardWidth,                 // 보드 폭과 동일
+                    margin: "24px auto 0",
                     display: "flex",
                     justifyContent: "space-between",
-                    marginTop: 24,      // 기존 8 → 24 (피그마 기준 딱 맞음)
                 }}
             >
-
                 {/* X 카드 */}
                 <div
                     style={{
@@ -249,28 +253,8 @@ export default function GameScreen({
                         justifyContent: "center",
                     }}
                 >
-                    <div
-                        style={{
-                            fontFamily: "Outfit, system-ui, sans-serif",
-                            fontSize: 14,
-                            fontWeight: 400,
-                            letterSpacing: "0.88px",
-                            color: "#1A2A33",
-                        }}
-                    >
-                        {xLabel}
-                    </div>
-                    <div
-                        style={{
-                            fontFamily: "Outfit, system-ui, sans-serif",
-                            fontSize: 24,
-                            fontWeight: 700,
-                            letterSpacing: "1.5px",
-                            color: "#1A2A33",
-                        }}
-                    >
-                        {scores.X}
-                    </div>
+                    <div style={scoreLabelStyle}>{xLabel}</div>
+                    <div style={scoreNumberStyle}>{scores.X}</div>
                 </div>
 
                 {/* TIES 카드 */}
@@ -286,28 +270,8 @@ export default function GameScreen({
                         justifyContent: "center",
                     }}
                 >
-                    <div
-                        style={{
-                            fontFamily: "Outfit, system-ui, sans-serif",
-                            fontSize: 14,
-                            fontWeight: 400,
-                            letterSpacing: "0.88px",
-                            color: "#1A2A33",
-                        }}
-                    >
-                        TIES
-                    </div>
-                    <div
-                        style={{
-                            fontFamily: "Outfit, system-ui, sans-serif",
-                            fontSize: 24,
-                            fontWeight: 700,
-                            letterSpacing: "1.5px",
-                            color: "#1A2A33",
-                        }}
-                    >
-                        {scores.ties}
-                    </div>
+                    <div style={scoreLabelStyle}>TIES</div>
+                    <div style={scoreNumberStyle}>{scores.ties}</div>
                 </div>
 
                 {/* O 카드 */}
@@ -323,28 +287,8 @@ export default function GameScreen({
                         justifyContent: "center",
                     }}
                 >
-                    <div
-                        style={{
-                            fontFamily: "Outfit, system-ui, sans-serif",
-                            fontSize: 14,
-                            fontWeight: 400,
-                            letterSpacing: "0.88px",
-                            color: "#1A2A33",
-                        }}
-                    >
-                        {oLabel}
-                    </div>
-                    <div
-                        style={{
-                            fontFamily: "Outfit, system-ui, sans-serif",
-                            fontSize: 24,
-                            fontWeight: 700,
-                            letterSpacing: "1.5px",
-                            color: "#1A2A33",
-                        }}
-                    >
-                        {scores.O}
-                    </div>
+                    <div style={scoreLabelStyle}>{oLabel}</div>
+                    <div style={scoreNumberStyle}>{scores.O}</div>
                 </div>
             </div>
         </div>
