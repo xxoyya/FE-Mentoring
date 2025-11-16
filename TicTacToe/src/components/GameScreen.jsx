@@ -8,8 +8,8 @@ import XColorBig from "../assets/X_color_big.png";
 import OColorBig from "../assets/O_color_big.png";
 import XEmpty from "../assets/X_empty.png";
 import OEmpty from "../assets/O_empty.png";
-import XDark from "../assets/X_dark.png";
-import ODark from "../assets/O_dark.png";
+import XLight from "../assets/X_light.png";
+import OLight from "../assets/O_light.png";
 
 // 리스타트 버튼
 import RedoIcon from "../assets/redo.png";
@@ -86,10 +86,12 @@ export default function GameScreen({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 24,
+                gap: 32,              // 전체 간격 줄이기 (기존 24 → 32로 통일)
+                marginTop: -40,        // 화면 중앙이 아니라 위쪽으로 올리기
             }}
         >
-            {/* 헤더 : 로고 / TURN / 다시하기 */}
+
+        {/* 헤더 : 로고 / TURN / 다시하기 */}
             <div
                 style={{
                     width: "100%",
@@ -133,7 +135,7 @@ export default function GameScreen({
                     }}
                 >
                     <img
-                        src={turn === "X" ? XDark : ODark}
+                        src={turn === "X" ? XLight : OLight}
                         alt={`${turn} turn icon`}
                         style={{ width: 24, height: 24 }}
                     />
@@ -171,10 +173,11 @@ export default function GameScreen({
                     display: "grid",
                     gridTemplateColumns: `repeat(3, ${cellSize}px)`,
                     gap: 20,
-                    marginTop: 8,
-                    marginBottom: 8,
+                    marginTop: 4,      // 기존 8 → 4 로 줄임
+                    marginBottom: 4,
                 }}
             >
+
                 {board.map((cell, index) => {
                     // 이 칸에 실제로 보여줄 아이콘 결정
                     let iconSrc = null;
@@ -229,9 +232,10 @@ export default function GameScreen({
                     width: "100%",
                     display: "flex",
                     justifyContent: "space-between",
-                    marginTop: 8,
+                    marginTop: 24,      // 기존 8 → 24 (피그마 기준 딱 맞음)
                 }}
             >
+
                 {/* X 카드 */}
                 <div
                     style={{
