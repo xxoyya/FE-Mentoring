@@ -1,40 +1,66 @@
 // src/components/StartScreen.jsx
-import XLogo from "../assets/X_color.png";
-import OLogo from "../assets/O_color.png";
-
+import { useState } from "react";
+import XColor from "../assets/X_color.png";
+import OColor from "../assets/O_color.png";
 import XDark from "../assets/X_dark.png";
-import XLight from "../assets/X_light.png";
 import ODark from "../assets/O_dark.png";
+import XLight from "../assets/X_light.png";
 import OLight from "../assets/O_light.png";
 
 export default function StartScreen({ playerMark, onChangeMark, onStartGame }) {
-    const isX = playerMark === "X";
+    const [hoverBtn, setHoverBtn] = useState(null); // "cpu" | "pvp" | null
 
-    const xIcon = isX ? XDark : XLight;   // X 선택됨 → X_dark
-    const oIcon = isX ? OLight : ODark;   // O 선택됨 → O_dark
+    const headerTextStyle = {
+        fontFamily: "Outfit, system-ui, sans-serif",
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: "1px",
+        color: "#A8BFC9",
+    };
+
+    const smallTextStyle = {
+        fontFamily: "Outfit, system-ui, sans-serif",
+        fontWeight: 400,
+        fontSize: 14,
+        letterSpacing: "0.88px",
+        color: "#A8BFC9",
+    };
+
+    const buttonTextStyle = {
+        fontFamily: "Outfit, system-ui, sans-serif",
+        fontWeight: 700,
+        fontSize: 20,
+        textTransform: "uppercase",
+        letterSpacing: "1.25px",
+        color: "#1A2A33",
+    };
+
+    const outerWidth = 460;
+    const buttonHeight = 67;
+
+    const isXSelected = playerMark === "X";
 
     return (
         <div
             style={{
-                width: 460,
+                width: outerWidth,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 24,
+                gap: 32,
             }}
         >
-            {/* 로고 X O */}
+            {/* 로고 */}
             <div
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    gap: 16,
-                    marginBottom: 24,
+                    gap: 8,
+                    marginBottom: 16,
                 }}
             >
-                <img src={XLogo} alt="X logo" style={{ width: 32, height: 32 }} />
-                <img src={OLogo} alt="O logo" style={{ width: 32, height: 32 }} />
+                <img src={XColor} alt="X logo" style={{ width: 32, height: 32 }} />
+                <img src={OColor} alt="O logo" style={{ width: 32, height: 32 }} />
             </div>
 
             {/* 마크 선택 카드 */}
@@ -44,56 +70,44 @@ export default function StartScreen({ playerMark, onChangeMark, onStartGame }) {
                     background: "#1F3641",
                     boxShadow: "0px -8px 0px #10212A inset",
                     borderRadius: 15,
-                    padding: "24px 24px 30px",
+                    padding: "24px 24px 32px",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     gap: 24,
                 }}
             >
-                <div
-                    style={{
-                        color: "#A8BFC9",
-                        fontSize: 16,
-                        fontFamily: "Outfit, system-ui, sans-serif",
-                        fontWeight: 700,
-                        letterSpacing: 1,
-                        textTransform: "uppercase",
-                    }}
-                >
-                    PICK PLAYER 1’S MARK
-                </div>
+                <div style={headerTextStyle}>PICK PLAYER 1’S MARK</div>
 
-                {/* X / O 토글 영역 */}
+                {/* X / O 선택 바 */}
                 <div
                     style={{
                         width: "100%",
+                        height: 72,
                         background: "#1A2A33",
                         borderRadius: 10,
-                        padding: 8,
                         display: "flex",
+                        padding: 8,
                         gap: 8,
                     }}
                 >
                     {/* X 버튼 */}
                     <button
-                        type="button"
                         onClick={() => onChangeMark("X")}
                         style={{
                             flex: 1,
-                            height: 54,
                             borderRadius: 10,
                             border: "none",
-                            outline: "none",
                             cursor: "pointer",
-                            background: isX ? "#A8BFC9" : "transparent",
+                            background: isXSelected ? "#A8BFC9" : "transparent",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
+                            padding: 0,
                         }}
                     >
                         <img
-                            src={xIcon}
+                            src={isXSelected ? XDark : XLight}
                             alt="X mark"
                             style={{ width: 32, height: 32 }}
                         />
@@ -101,92 +115,89 @@ export default function StartScreen({ playerMark, onChangeMark, onStartGame }) {
 
                     {/* O 버튼 */}
                     <button
-                        type="button"
                         onClick={() => onChangeMark("O")}
                         style={{
                             flex: 1,
-                            height: 54,
                             borderRadius: 10,
                             border: "none",
-                            outline: "none",
                             cursor: "pointer",
-                            background: !isX ? "#A8BFC9" : "transparent",
+                            background: !isXSelected ? "#A8BFC9" : "transparent",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
+                            padding: 0,
                         }}
                     >
                         <img
-                            src={oIcon}
+                            src={!isXSelected ? ODark : OLight}
                             alt="O mark"
                             style={{ width: 32, height: 32 }}
                         />
                     </button>
                 </div>
 
-                <div
-                    style={{
-                        color: "#A8BFC9",
-                        fontSize: 14,
-                        fontFamily: "Outfit, system-ui, sans-serif",
-                        fontWeight: 400,
-                        letterSpacing: 0.88,
-                        textTransform: "uppercase",
-                        opacity: 1,
-                    }}
-                >
-                    REMEMBER : X GOES FIRST
-                </div>
+                <div style={smallTextStyle}>REMEMBER : X GOES FIRST</div>
             </div>
 
-            {/* NEW GAME (VS CPU) 버튼 */}
-            <button
-                type="button"
-                onClick={() => onStartGame("cpu")}
+            {/* 버튼 영역 */}
+            <div
                 style={{
-                    marginTop: 24,
                     width: "100%",
-                    height: 67,
-                    borderRadius: 15,
-                    border: "none",
-                    outline: "none",
-                    cursor: "pointer",
-                    background: "#F2B137",
-                    boxShadow: "0px -8px 0px #CC8B13 inset",
-                    color: "#1A2A33",
-                    fontSize: 20,
-                    fontFamily: "Outfit, system-ui, sans-serif",
-                    fontWeight: 700,
-                    letterSpacing: 1.25,
-                    textTransform: "uppercase",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 20,
                 }}
             >
-                NEW GAME (VS CPU)
-            </button>
+                {/* NEW GAME (VS CPU) */}
+                <button
+                    onClick={() => onStartGame("cpu")}
+                    onMouseEnter={() => setHoverBtn("cpu")}
+                    onMouseLeave={() => setHoverBtn(null)}
+                    style={{
+                        width: "100%",
+                        height: buttonHeight,
+                        borderRadius: 15,
+                        border: "none",
+                        cursor: "pointer",
+                        background:
+                            hoverBtn === "cpu" ? "#FFC860" : "#F2B137",
+                        boxShadow:
+                            hoverBtn === "cpu"
+                                ? "0px -8px 0px #CC8B13 inset"
+                                : "0px -8px 0px #CC8B13 inset",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <span style={buttonTextStyle}>NEW GAME (VS CPU)</span>
+                </button>
 
-            {/* NEW GAME (VS PLAYER) 버튼 */}
-            <button
-                type="button"
-                onClick={() => onStartGame("pvp")}
-                style={{
-                    width: "100%",
-                    height: 67,
-                    borderRadius: 15,
-                    border: "none",
-                    outline: "none",
-                    cursor: "pointer",
-                    background: "#31C3BD",
-                    boxShadow: "0px -8px 0px #118C87 inset",
-                    color: "#1A2A33",
-                    fontSize: 20,
-                    fontFamily: "Outfit, system-ui, sans-serif",
-                    fontWeight: 700,
-                    letterSpacing: 1.25,
-                    textTransform: "uppercase",
-                }}
-            >
-                NEW GAME (VS PLAYER)
-            </button>
+                {/* NEW GAME (VS PLAYER) */}
+                <button
+                    onClick={() => onStartGame("pvp")}
+                    onMouseEnter={() => setHoverBtn("pvp")}
+                    onMouseLeave={() => setHoverBtn(null)}
+                    style={{
+                        width: "100%",
+                        height: buttonHeight,
+                        borderRadius: 15,
+                        border: "none",
+                        cursor: "pointer",
+                        background:
+                            hoverBtn === "pvp" ? "#65E9E4" : "#31C3BD",
+                        boxShadow:
+                            hoverBtn === "pvp"
+                                ? "0px -8px 0px #118C87 inset"
+                                : "0px -8px 0px #118C87 inset",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <span style={buttonTextStyle}>NEW GAME (VS PLAYER)</span>
+                </button>
+            </div>
         </div>
     );
 }
