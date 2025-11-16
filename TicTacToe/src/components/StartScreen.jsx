@@ -1,94 +1,192 @@
 // src/components/StartScreen.jsx
-import MarkSelector from "./MarkSelector";
+import XLogo from "../assets/X_color.png";
+import OLogo from "../assets/O_color.png";
+
+import XDark from "../assets/X_dark.png";
+import XLight from "../assets/X_light.png";
+import ODark from "../assets/O_dark.png";
+import OLight from "../assets/O_light.png";
 
 export default function StartScreen({ playerMark, onChangeMark, onStartGame }) {
+    const isX = playerMark === "X";
+
+    const xIcon = isX ? XDark : XLight;   // X 선택됨 → X_dark
+    const oIcon = isX ? OLight : ODark;   // O 선택됨 → O_dark
+
     return (
-        <div style={{ width: 460, margin: "0 auto", maxWidth: 460 }}>
-            {/* XO 로고는 편한대로 */}
+        <div
+            style={{
+                width: 460,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 24,
+            }}
+        >
+            {/* 로고 X O */}
             <div
                 style={{
                     display: "flex",
-                    gap: 8,
-                    marginBottom: 40,
                     alignItems: "center",
+                    justifyContent: "center",
+                    gap: 16,
+                    marginBottom: 24,
                 }}
             >
-                <span style={{ color: "#31C3BD", fontSize: 32, fontWeight: 700 }}>X</span>
-                <span style={{ color: "#F2B137", fontSize: 32, fontWeight: 700 }}>O</span>
+                <img src={XLogo} alt="X logo" style={{ width: 32, height: 32 }} />
+                <img src={OLogo} alt="O logo" style={{ width: 32, height: 32 }} />
             </div>
 
             {/* 마크 선택 카드 */}
             <div
                 style={{
-                    width: 460,
-                    height: 205,
+                    width: "100%",
                     background: "#1F3641",
                     boxShadow: "0px -8px 0px #10212A inset",
                     borderRadius: 15,
-                    padding: "24px",
-                    marginBottom: 24,
+                    padding: "24px 24px 30px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 24,
                 }}
             >
                 <div
                     style={{
-                        textAlign: "center",
                         color: "#A8BFC9",
                         fontSize: 16,
+                        fontFamily: "Outfit, system-ui, sans-serif",
                         fontWeight: 700,
                         letterSpacing: 1,
                         textTransform: "uppercase",
-                        marginBottom: 24,
                     }}
                 >
                     PICK PLAYER 1’S MARK
                 </div>
 
-                <MarkSelector value={playerMark} onChange={onChangeMark} />
+                {/* X / O 토글 영역 */}
+                <div
+                    style={{
+                        width: "100%",
+                        background: "#1A2A33",
+                        borderRadius: 10,
+                        padding: 8,
+                        display: "flex",
+                        gap: 8,
+                    }}
+                >
+                    {/* X 버튼 */}
+                    <button
+                        type="button"
+                        onClick={() => onChangeMark("X")}
+                        style={{
+                            flex: 1,
+                            height: 54,
+                            borderRadius: 10,
+                            border: "none",
+                            outline: "none",
+                            cursor: "pointer",
+                            background: isX ? "#A8BFC9" : "transparent",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <img
+                            src={xIcon}
+                            alt="X mark"
+                            style={{ width: 32, height: 32 }}
+                        />
+                    </button>
+
+                    {/* O 버튼 */}
+                    <button
+                        type="button"
+                        onClick={() => onChangeMark("O")}
+                        style={{
+                            flex: 1,
+                            height: 54,
+                            borderRadius: 10,
+                            border: "none",
+                            outline: "none",
+                            cursor: "pointer",
+                            background: !isX ? "#A8BFC9" : "transparent",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <img
+                            src={oIcon}
+                            alt="O mark"
+                            style={{ width: 32, height: 32 }}
+                        />
+                    </button>
+                </div>
 
                 <div
                     style={{
-                        textAlign: "center",
                         color: "#A8BFC9",
                         fontSize: 14,
+                        fontFamily: "Outfit, system-ui, sans-serif",
                         fontWeight: 400,
                         letterSpacing: 0.88,
-                        marginTop: 20,
+                        textTransform: "uppercase",
+                        opacity: 1,
                     }}
                 >
                     REMEMBER : X GOES FIRST
                 </div>
             </div>
 
-            {/* 버튼 두 개 */}
+            {/* NEW GAME (VS CPU) 버튼 */}
             <button
-                style={primaryButtonStyle("#F2B137", "#CC8B13")}
+                type="button"
                 onClick={() => onStartGame("cpu")}
+                style={{
+                    marginTop: 24,
+                    width: "100%",
+                    height: 67,
+                    borderRadius: 15,
+                    border: "none",
+                    outline: "none",
+                    cursor: "pointer",
+                    background: "#F2B137",
+                    boxShadow: "0px -8px 0px #CC8B13 inset",
+                    color: "#1A2A33",
+                    fontSize: 20,
+                    fontFamily: "Outfit, system-ui, sans-serif",
+                    fontWeight: 700,
+                    letterSpacing: 1.25,
+                    textTransform: "uppercase",
+                }}
             >
                 NEW GAME (VS CPU)
             </button>
 
+            {/* NEW GAME (VS PLAYER) 버튼 */}
             <button
-                style={{ ...primaryButtonStyle("#31C3BD", "#118C87"), marginTop: 20 }}
+                type="button"
                 onClick={() => onStartGame("pvp")}
+                style={{
+                    width: "100%",
+                    height: 67,
+                    borderRadius: 15,
+                    border: "none",
+                    outline: "none",
+                    cursor: "pointer",
+                    background: "#31C3BD",
+                    boxShadow: "0px -8px 0px #118C87 inset",
+                    color: "#1A2A33",
+                    fontSize: 20,
+                    fontFamily: "Outfit, system-ui, sans-serif",
+                    fontWeight: 700,
+                    letterSpacing: 1.25,
+                    textTransform: "uppercase",
+                }}
             >
                 NEW GAME (VS PLAYER)
             </button>
         </div>
     );
 }
-
-const primaryButtonStyle = (bg, shadow) => ({
-    width: 460,
-    height: 67,
-    borderRadius: 15,
-    border: "none",
-    cursor: "pointer",
-    background: bg,
-    boxShadow: `0px -8px 0px ${shadow} inset`,
-    color: "#1A2A33",
-    fontSize: 20,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: 1.25,
-    marginTop: 0,
-});

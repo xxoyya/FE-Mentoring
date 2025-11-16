@@ -389,3 +389,14 @@ body {
   justify-content: center;
   gap: 16px;
 }
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.mark-icon {
+  width: 30px;
+  height: 30px;
+}
+
