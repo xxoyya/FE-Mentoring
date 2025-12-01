@@ -16,6 +16,7 @@ export default function BillsSummary() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    marginBottom: "20px"
                 }}
             >
                 <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#201F24" }}>
@@ -24,7 +25,7 @@ export default function BillsSummary() {
                 <span style={{ fontSize: 14, color: "#696868" }}>See Details</span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "10px" }}>
                 <div
                     style={{
                         background: "#F8F4F0",

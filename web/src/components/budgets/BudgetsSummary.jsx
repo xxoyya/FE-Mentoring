@@ -16,7 +16,7 @@ export default function BudgetsSummary() {
     return (
         <div className="card budgets-card">
             {/* 상단 헤더 */}
-            <div className="section-header">
+            <div className="section-header budgets-header" style = {{ marginBottom: "50px" }}>
                 <span className="section-title">Budgets</span>
                 <div className="section-link">
                     <span>See Details</span>
@@ -25,25 +25,36 @@ export default function BudgetsSummary() {
             </div>
 
             {/* 본문: 왼쪽 도넛, 오른쪽 범례 */}
-            <div className="budgets-body">
+            <div className="budgets-body" style = {{ marginBottom: "30px" }}>
+                {/* 도넛 */}
                 <div className="budgets-donut-wrapper">
                     <div className="budgets-donut-outer">
-                        <div className="budgets-donut-inner" />
-                        <div className="budgets-donut-center">
-                            <span className="budgets-amount">${usedTotal}</span>
-                            <span className="budgets-caption">of ${totalLimit} limit</span>
+                        {/* 연한 색 안쪽 링 */}
+                        <div className="budgets-donut-middle" />
+                        {/* 흰색 가운데 + 텍스트 */}
+                        <div className="budgets-donut-inner">
+                            <div className="budgets-donut-center">
+                                <span className="budgets-amount">${usedTotal}</span>
+                                <span className="budgets-caption">of ${totalLimit} limit</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                {/* 범례 */}
                 <ul className="budgets-legend">
                     {categories.map((c) => (
                         <li key={c.id}>
                             <div className="legend-left">
                                 <span className={`legend-dot ${c.colorClass}`} />
-                                <span className="legend-label">{c.name}</span>
+
+                                <div className="legend-text">
+                                    <span className="legend-name">{c.name}</span>
+                                    <span className="legend-amount">
+                    ${c.amount.toFixed(2)}
+                  </span>
+                                </div>
                             </div>
-                            <span className="legend-value">${c.amount.toFixed(2)}</span>
                         </li>
                     ))}
                 </ul>

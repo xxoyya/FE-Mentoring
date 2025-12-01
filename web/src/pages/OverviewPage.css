@@ -60,7 +60,7 @@
 /* 메인 2열 */
 .overview-main {
     display: grid;
-    grid-template-columns: 1.05fr 1fr; /* 왼쪽이 살짝 넓게 */
+    grid-template-columns: 1.4fr 0.8fr; /* 왼쪽이 살짝 넓게 */
     gap: 24px;
     align-items: stretch; /* 양쪽 컬럼 높이 맞추기 */
 }

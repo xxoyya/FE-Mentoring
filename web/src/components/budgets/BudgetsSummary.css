@@ -1,114 +1,154 @@
-/* 전체 카드 크기 조금 키우기 */
+/* 공통 카드 스타일은 기존 card 클래스 그대로 사용한다고 가정 */
+
 .budgets-card {
-    min-height: 320px;
+    /* 오른쪽 카드라 약간 좁게 */
+    flex: 0.85;
 }
 
-/* 레이아웃: 도넛 + 범례 */
+/* 헤더와 본문 사이 간격 */
+.budgets-header {
+    margin-bottom: 32px;
+}
+
+/* 도넛 + 범례 전체 레이아웃 */
 .budgets-body {
     display: flex;
-    gap: 24px;
     align-items: center;
+    gap: 40px;
 }
 
-/* 도넛 그래프 (conic-gradient 활용) */
+/* ===== 도넛 공통 ===== */
 .budgets-donut-wrapper {
-    flex: 1;
+    width: 220px;
+    height: 220px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 .budgets-donut-outer {
     position: relative;
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
+    /* 바깥쪽 진한 도넛 */
     background: conic-gradient(
-        /* 대충 Figma 비율 비슷하게 */
-            var(--color-green) 0deg 40deg,
-            var(--color-cyan) 40deg 260deg,
-            var(--color-yellow) 260deg 300deg,
-            var(--color-navy) 300deg 360deg
+            #277c78 0 20%,
+            #82c9d7 20% 65%,
+            #f2cdac 65% 85%,
+            #626070 85% 100%
     );
+}
+
+/* ✅ 안쪽 연한 링 (겉 링과 안쪽 흰 원 사이) */
+.budgets-donut-middle {
+    position: absolute;
+    /* 바깥에서 안쪽으로 18px 만큼 안으로 들어오게 : 안쪽 반 링 느낌 */
+    inset: 28px;
+    border-radius: 50%;
+    /* 살짝 희게 덮어서 연하게 보이게 */
+    background: rgba(255, 255, 255, 0.35);
+    z-index: 1;
+}
+
+/* ✅ 가운데 하얀 원 */
+.budgets-donut-inner {
+    position: absolute;
+    inset: 40px; /* 숫자 키워서 안쪽 원을 더 작게 = 링을 두꺼게 */
+    border-radius: 50%;
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
 }
 
-.budgets-donut-inner {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background-color: #ffffff;
-}
-
+/* 가운데 텍스트는 그대로 */
 .budgets-donut-center {
-    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
 }
 
+
 .budgets-amount {
+    font-family: "Public Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
     font-size: 32px;
     font-weight: 700;
+    color: #201f24;
 }
 
 .budgets-caption {
+    font-family: "Public Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
     font-size: 12px;
-    color: var(--color-grey-500);
+    color: #696868;
 }
 
-/* 범례 영역 */
+/* ===== 범례 ===== */
+
 .budgets-legend {
-    flex: 1;
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    font-size: 14px;
 }
 
 .budgets-legend li {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    align-items: flex-start;
 }
 
 .legend-left {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
 }
 
 .legend-dot {
     width: 4px;
-    height: 24px;
+    height: 32px;
     border-radius: 8px;
 }
 
+/* 색상들 */
 .legend-dot--green {
-    background-color: var(--color-green);
+    background: #277c78;
 }
+
 .legend-dot--cyan {
-    background-color: var(--color-cyan);
+    background: #82c9d7;
 }
+
 .legend-dot--yellow {
-    background-color: var(--color-yellow);
+    background: #f2cdac;
 }
+
 .legend-dot--navy {
-    background-color: var(--color-navy);
+    background: #626070;
 }
 
-.legend-label {
-    color: var(--color-grey-500);
+/* 텍스트 두 줄 (이름 / 금액) */
+.legend-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: "Public Sans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+.legend-name {
     font-size: 12px;
+    font-weight: 400;
+    color: #696868;
 }
 
-.legend-value {
+.legend-amount {
+    font-size: 14px;
     font-weight: 700;
+    color: #201f24;
 }

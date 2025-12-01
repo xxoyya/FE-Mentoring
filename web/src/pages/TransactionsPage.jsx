@@ -1,5 +1,7 @@
 // src/pages/TransactionsPage.jsx
+import { useMemo, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
+import { transactions } from "../data/transactions";
 
 const cardStyle = {
     background: "#FFFFFF",
@@ -13,16 +15,111 @@ const labelStyle = {
     marginBottom: 8,
 };
 
-const pillStyle = {
-    padding: "8px 16px",
+const pillButtonBase = {
+    padding: "12px 20px",
     borderRadius: 8,
     border: "1px solid #98908B",
     fontSize: 14,
     color: "#201F24",
     background: "#FFFFFF",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
 };
 
+const pageSize = 5;
+
+const SORT_OPTIONS = [
+    { value: "latest", label: "Latest" },
+    { value: "oldest", label: "Oldest" },
+    { value: "aToZ", label: "A to Z" },
+    { value: "zToA", label: "Z to A" },
+    { value: "highest", label: "Highest" },
+    { value: "lowest", label: "Lowest" },
+];
+
+const CATEGORY_OPTIONS = [
+    "All Transactions",
+    "General",
+    "Bills",
+    "Groceries",
+    "Dining Out",
+    "Entertainment",
+    "Transportation",
+];
+
 export default function TransactionsPage() {
+    const [search, setSearch] = useState("");
+    const [sortBy, setSortBy] = useState("latest");
+    const [category, setCategory] = useState("All Transactions");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sortOpen, setSortOpen] = useState(false);
+    const [categoryOpen, setCategoryOpen] = useState(false);
+
+    // 필터 + 정렬된 전체 리스트
+    const filtered = useMemo(() => {
+        let list = [...transactions];
+
+        // 검색
+        if (search.trim()) {
+            const q = search.toLowerCase();
+            list = list.filter((tx) => tx.name.toLowerCase().includes(q));
+        }
+
+        // 카테고리
+        if (category !== "All Transactions") {
+            list = list.filter((tx) => tx.category === category);
+        }
+
+        // 정렬
+        list.sort((a, b) => {
+            switch (sortBy) {
+                case "latest":
+                    return a.date < b.date ? 1 : -1;
+                case "oldest":
+                    return a.date > b.date ? 1 : -1;
+                case "aToZ":
+                    return a.name.localeCompare(b.name);
+                case "zToA":
+                    return b.name.localeCompare(a.name);
+                case "highest":
+                    return b.amount - a.amount;
+                case "lowest":
+                    return a.amount - b.amount;
+                default:
+                    return 0;
+            }
+        });
+
+        return list;
+    }, [search, sortBy, category]);
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const safePage = Math.min(currentPage, totalPages);
+
+    const startIndex = (safePage - 1) * pageSize;
+    const pageItems = filtered.slice(startIndex, startIndex + pageSize);
+
+    const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    const handleChangeSort = (value) => {
+        setSortBy(value);
+        setCurrentPage(1);
+        setSortOpen(false);
+    };
+
+    const handleChangeCategory = (value) => {
+        setCategory(value);
+        setCurrentPage(1);
+        setCategoryOpen(false);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+        setCurrentPage(1);
+    };
+
     return (
         <DashboardLayout activeMenu="transactions">
             <div
@@ -44,8 +141,9 @@ export default function TransactionsPage() {
                     Transactions
                 </h1>
 
-                {/* 검색 + 필터 바 */}
-                <div style={{ ...cardStyle, padding: 24, gap: 24 }}>
+                {/* 검색 + 필터 + 테이블 + 페이지네이션 */}
+                <div style={{ ...cardStyle, padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
+                    {/* 검색 + 필터 바 */}
                     <div
                         style={{
                             display: "flex",
@@ -65,16 +163,20 @@ export default function TransactionsPage() {
                                     padding: "12px 20px",
                                     borderRadius: 8,
                                     border: "1px solid #98908B",
+                                    background: "#FFFFFF",
                                 }}
                             >
                                 <input
                                     placeholder="Search transaction"
+                                    value={search}
+                                    onChange={handleSearchChange}
                                     style={{
                                         border: "none",
                                         outline: "none",
                                         flex: 1,
                                         fontSize: 14,
                                         color: "#201F24",
+                                        fontFamily: "Public Sans",
                                     }}
                                 />
                                 <span style={{ fontSize: 16 }}>🔍</span>
@@ -91,19 +193,100 @@ export default function TransactionsPage() {
                             }}
                         >
                             {/* Sort by */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
                                 <span style={{ fontSize: 14, color: "#696868" }}>Sort by</span>
-                                <button style={pillStyle}>
-                                    Latest <span style={{ marginLeft: 8 }}>▾</span>
+                                <button
+                                    type="button"
+                                    style={pillButtonBase}
+                                    onClick={() => setSortOpen((o) => !o)}
+                                >
+                                    {
+                                        SORT_OPTIONS.find((o) => o.value === sortBy)
+                                            ?.label
+                                    }
+                                    <span>▾</span>
                                 </button>
+
+                                {/* Sort 드롭다운 */}
+                                {sortOpen && (
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: "110%",
+                                            right: 0,
+                                            background: "#FFFFFF",
+                                            borderRadius: 8,
+                                            boxShadow: "0 12px 24px rgba(0,0,0,0.12)",
+                                            padding: "8px 0",
+                                            zIndex: 10,
+                                            minWidth: 160,
+                                        }}
+                                    >
+                                        {SORT_OPTIONS.map((opt) => (
+                                            <div
+                                                key={opt.value}
+                                                onClick={() => handleChangeSort(opt.value)}
+                                                style={{
+                                                    padding: "8px 20px",
+                                                    fontSize: 14,
+                                                    cursor: "pointer",
+                                                    background:
+                                                        opt.value === sortBy ? "#F8F4F0" : "#FFFFFF",
+                                                    color: "#201F24",
+                                                }}
+                                            >
+                                                {opt.label}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Category */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
                                 <span style={{ fontSize: 14, color: "#696868" }}>Category</span>
-                                <button style={pillStyle}>
-                                    All Transactions <span style={{ marginLeft: 8 }}>▾</span>
+                                <button
+                                    type="button"
+                                    style={pillButtonBase}
+                                    onClick={() => setCategoryOpen((o) => !o)}
+                                >
+                                    {category}
+                                    <span>▾</span>
                                 </button>
+
+                                {/* Category 드롭다운 */}
+                                {categoryOpen && (
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: "110%",
+                                            right: 0,
+                                            background: "#FFFFFF",
+                                            borderRadius: 8,
+                                            boxShadow: "0 12px 24px rgba(0,0,0,0.12)",
+                                            padding: "8px 0",
+                                            zIndex: 10,
+                                            minWidth: 200,
+                                        }}
+                                    >
+                                        {CATEGORY_OPTIONS.map((cat) => (
+                                            <div
+                                                key={cat}
+                                                onClick={() => handleChangeCategory(cat)}
+                                                style={{
+                                                    padding: "8px 20px",
+                                                    fontSize: 14,
+                                                    cursor: "pointer",
+                                                    background:
+                                                        cat === category ? "#F8F4F0" : "#FFFFFF",
+                                                    color: "#201F24",
+                                                }}
+                                            >
+                                                {cat}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -111,7 +294,7 @@ export default function TransactionsPage() {
                     {/* 테이블 헤더 */}
                     <div
                         style={{
-                            marginTop: 24,
+                            marginTop: 8,
                             padding: "12px 16px",
                             borderBottom: "1px solid #F2F2F2",
                             display: "flex",
@@ -126,111 +309,116 @@ export default function TransactionsPage() {
                         <div style={{ width: 200, textAlign: "right" }}>Amount</div>
                     </div>
 
-                    {/* 예시 행들 */}
-                    {[
-                        {
-                            name: "Emma Richardson",
-                            category: "General",
-                            date: "19 Aug 2024",
-                            amount: "+$75.50",
-                            positive: true,
-                        },
-                        {
-                            name: "Savory Bites Bistro",
-                            category: "Dining Out",
-                            date: "19 Aug 2024",
-                            amount: "-$55.50",
-                        },
-                        {
-                            name: "Daniel Carter",
-                            category: "General",
-                            date: "18 Aug 2024",
-                            amount: "-$42.30",
-                        },
-                    ].map((tx, idx) => (
-                        <div key={idx}>
-                            <div
-                                style={{
-                                    padding: "12px 16px",
-                                    display: "flex",
-                                    gap: 32,
-                                    alignItems: "center",
-                                }}
-                            >
-                                {/* 이름 */}
+                    {/* 데이터 행들 */}
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 0,
+                        }}
+                    >
+                        {pageItems.map((tx, idx) => (
+                            <div key={tx.id}>
                                 <div
                                     style={{
-                                        flex: 1,
+                                        padding: "16px 16px",
                                         display: "flex",
+                                        gap: 32,
                                         alignItems: "center",
-                                        gap: 16,
                                     }}
                                 >
+                                    {/* 이름 + 아바타 */}
                                     <div
                                         style={{
-                                            width: 40,
-                                            height: 40,
-                                            borderRadius: "50%",
-                                            background: "#F8F4F0",
-                                        }}
-                                    />
-                                    <div
-                                        style={{
-                                            fontSize: 14,
-                                            fontWeight: 700,
-                                            color: "#201F24",
+                                            flex: 1,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 16,
                                         }}
                                     >
-                                        {tx.name}
+                                        <div
+                                            style={{
+                                                width: 40,
+                                                height: 40,
+                                                borderRadius: "50%",
+                                                background: "#F8F4F0",
+                                            }}
+                                        />
+                                        <div
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 700,
+                                                color: "#201F24",
+                                            }}
+                                        >
+                                            {tx.name}
+                                        </div>
+                                    </div>
+
+                                    {/* 카테고리 */}
+                                    <div
+                                        style={{
+                                            width: 120,
+                                            fontSize: 12,
+                                            color: "#696868",
+                                        }}
+                                    >
+                                        {tx.category}
+                                    </div>
+
+                                    {/* 날짜 (ISO → 보기용으로 그냥 둠) */}
+                                    <div
+                                        style={{
+                                            width: 120,
+                                            fontSize: 12,
+                                            color: "#696868",
+                                        }}
+                                    >
+                                        {tx.date}
+                                    </div>
+
+                                    {/* 금액 */}
+                                    <div
+                                        style={{
+                                            width: 200,
+                                            textAlign: "right",
+                                            fontSize: 14,
+                                            fontWeight: 700,
+                                            color: tx.type === "income" ? "#277C78" : "#201F24",
+                                        }}
+                                    >
+                                        {tx.type === "income" ? "+$" : "-$"}
+                                        {tx.amount.toFixed(2)}
                                     </div>
                                 </div>
 
-                                {/* 카테고리 */}
-                                <div
-                                    style={{
-                                        width: 120,
-                                        fontSize: 12,
-                                        color: "#696868",
-                                    }}
-                                >
-                                    {tx.category}
-                                </div>
-
-                                {/* 날짜 */}
-                                <div
-                                    style={{
-                                        width: 120,
-                                        fontSize: 12,
-                                        color: "#696868",
-                                    }}
-                                >
-                                    {tx.date}
-                                </div>
-
-                                {/* 금액 */}
-                                <div
-                                    style={{
-                                        width: 200,
-                                        textAlign: "right",
-                                        fontSize: 14,
-                                        fontWeight: 700,
-                                        color: tx.positive ? "#277C78" : "#201F24",
-                                    }}
-                                >
-                                    {tx.amount}
-                                </div>
+                                {/* 마지막 줄 빼고 구분선 */}
+                                {idx !== pageItems.length - 1 && (
+                                    <div
+                                        style={{
+                                            height: 1,
+                                            background: "#F2F2F2",
+                                            margin: "0 16px",
+                                        }}
+                                    />
+                                )}
                             </div>
-                            {idx !== 2 && (
-                                <div
-                                    style={{
-                                        height: 1,
-                                        background: "#F2F2F2",
-                                        margin: "0 16px",
-                                    }}
-                                />
-                            )}
-                        </div>
-                    ))}
+                        ))}
+
+                        {/* 데이터가 없을 때 */}
+                        {pageItems.length === 0 && (
+                            <div
+                                style={{
+                                    padding: 32,
+                                    textAlign: "center",
+                                    color: "#98908B",
+                                    fontSize: 14,
+                                }}
+                            >
+                                No transactions found.
+                            </div>
+                        )}
+                    </div>
 
                     {/* 페이지네이션 */}
                     <div
@@ -241,22 +429,35 @@ export default function TransactionsPage() {
                             alignItems: "center",
                         }}
                     >
-                        <button style={pillStyle}>
-                            <span style={{ marginRight: 8 }}>◀</span> Prev
+                        <button
+                            type="button"
+                            style={pillButtonBase}
+                            onClick={() =>
+                                setCurrentPage((p) => Math.max(1, p - 1))
+                            }
+                            disabled={safePage === 1}
+                        >
+                            <span style={{ transform: "rotate(180deg)" }}>▶</span>
+                            <span>Prev</span>
                         </button>
 
                         <div style={{ display: "flex", gap: 8 }}>
-                            {[1, 2, 3, 4, 5].map((n) => (
+                            {pageNumbers.map((n) => (
                                 <button
                                     key={n}
+                                    type="button"
+                                    onClick={() => setCurrentPage(n)}
                                     style={{
                                         width: 40,
                                         height: 40,
                                         borderRadius: 8,
-                                        border: n === 2 ? "none" : "1px solid #98908B",
-                                        background: n === 2 ? "#201F24" : "#FFFFFF",
-                                        color: n === 2 ? "#FFFFFF" : "#201F24",
+                                        border:
+                                            n === safePage ? "none" : "1px solid #98908B",
+                                        background:
+                                            n === safePage ? "#201F24" : "#FFFFFF",
+                                        color: n === safePage ? "#FFFFFF" : "#201F24",
                                         fontSize: 14,
+                                        cursor: "pointer",
                                     }}
                                 >
                                     {n}
@@ -264,8 +465,18 @@ export default function TransactionsPage() {
                             ))}
                         </div>
 
-                        <button style={pillStyle}>
-                            Next <span style={{ marginLeft: 8 }}>▶</span>
+                        <button
+                            type="button"
+                            style={pillButtonBase}
+                            onClick={() =>
+                                setCurrentPage((p) =>
+                                    Math.min(totalPages, p + 1)
+                                )
+                            }
+                            disabled={safePage === totalPages}
+                        >
+                            <span>Next</span>
+                            <span>▶</span>
                         </button>
                     </div>
                 </div>
