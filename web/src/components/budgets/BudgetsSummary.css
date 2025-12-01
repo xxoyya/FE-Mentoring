@@ -1,0 +1,114 @@
+/* 전체 카드 크기 조금 키우기 */
+.budgets-card {
+    min-height: 320px;
+}
+
+/* 레이아웃: 도넛 + 범례 */
+.budgets-body {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+/* 도넛 그래프 (conic-gradient 활용) */
+.budgets-donut-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.budgets-donut-outer {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+        /* 대충 Figma 비율 비슷하게 */
+            var(--color-green) 0deg 40deg,
+            var(--color-cyan) 40deg 260deg,
+            var(--color-yellow) 260deg 300deg,
+            var(--color-navy) 300deg 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.budgets-donut-inner {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.budgets-donut-center {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.budgets-amount {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.budgets-caption {
+    font-size: 12px;
+    color: var(--color-grey-500);
+}
+
+/* 범례 영역 */
+.budgets-legend {
+    flex: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.budgets-legend li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.legend-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-dot {
+    width: 4px;
+    height: 24px;
+    border-radius: 8px;
+}
+
+.legend-dot--green {
+    background-color: var(--color-green);
+}
+.legend-dot--cyan {
+    background-color: var(--color-cyan);
+}
+.legend-dot--yellow {
+    background-color: var(--color-yellow);
+}
+.legend-dot--navy {
+    background-color: var(--color-navy);
+}
+
+.legend-label {
+    color: var(--color-grey-500);
+    font-size: 12px;
+}
+
+.legend-value {
+    font-weight: 700;
+}

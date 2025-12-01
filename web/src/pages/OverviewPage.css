@@ -1,0 +1,107 @@
+/* 페이지 전체 레이아웃 */
+.overview-page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* 헤더 */
+.overview-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+}
+
+/* 상단 요약 카드 3개 */
+.overview-top {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.summary-card {
+    padding: 24px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-card--dark {
+    background-color: var(--color-grey-900);
+    color: #ffffff;
+}
+
+.summary-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-grey-500);
+}
+
+.summary-card--dark .summary-label {
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+.summary-value {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.summary-value--light {
+    color: var(--color-grey-900);
+}
+
+/* 메인 2열 */
+.overview-main {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr; /* 왼쪽이 살짝 넓게 */
+    gap: 24px;
+    align-items: stretch; /* 양쪽 컬럼 높이 맞추기 */
+}
+
+.overview-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 공통 카드 스타일 (Pots, Transactions, Budgets, Bills) */
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 32px;
+}
+
+/* 섹션 헤더 (제목 + 우측 텍스트 버튼) */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--color-grey-500);
+    cursor: pointer;
+}
+
+/* 아래 Budgets / Bills / TransactionsPreview 에서 같이 사용 */
+.badge-rail {
+    width: 4px;
+    border-radius: 8px;
+}
