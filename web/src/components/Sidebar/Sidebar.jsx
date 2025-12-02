@@ -2,6 +2,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+// src/layouts/DashboardLayout.jsx
+import logoIcon from "../../assets/Logo.png";
+import homeIcon from "../../assets/home.png";
+import homeClickIcon from "../../assets/home_click.png";
+import transactionsIcon from "../../assets/trans.png";
+import transactionsClickIcon from "../../assets/trans_click.png";
+import budgetsIcon from "../../assets/budgets.png";
+import potsIcon from "../../assets/pots.png";
+import recurringIcon from "../../assets/bills.png";
+
 const linkBaseStyle = {
     height: 56,
     padding: "16px 32px",
@@ -16,8 +26,15 @@ const linkBaseStyle = {
     fontWeight: 700,
 };
 
-function SidebarLink({ to, label, iconColor, isActive }) {
+function SidebarLink({ to, label, isActive, icon, activeIcon }) {
     const active = isActive;
+
+    // 활성화 여부에 따라 보여줄 아이콘 선택
+    const showIcon = active ? activeIcon || icon : icon;
+
+    // 아이콘 이미지가 없을 때 사용할 기본 색 네모
+    const fallbackColor = active ? "#277C78" : "#B3B3B3";
+
     return (
         <div
             style={{
@@ -31,18 +48,35 @@ function SidebarLink({ to, label, iconColor, isActive }) {
                 style={{
                     width: 24,
                     height: 24,
-                    position: "relative",
-                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                 }}
             >
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 3,
-                        background: iconColor,
-                    }}
-                />
+                {showIcon ? (
+                    <img
+                        src={showIcon}
+                        alt=""
+                        style={{
+                            width: 24,
+                            height: 24,
+                            objectFit: "contain",
+                            display: "block",
+                        }}
+                    />
+                ) : (
+                    // 아직 아이콘 파일 없는 메뉴는 이 네모가 보이게
+                    <div
+                        style={{
+                            width: 18,
+                            height: 18,
+                            borderRadius: 4,
+                            background: fallbackColor,
+                        }}
+                    />
+                )}
             </div>
+
             <NavLink
                 to={to}
                 style={{
@@ -79,11 +113,13 @@ export default function Sidebar() {
                     padding: "40px 32px",
                 }}
             >
-                <div
+                <img
+                    src={logoIcon}
+                    alt="Logo"
                     style={{
                         width: 121.45,
-                        height: 21.76,
-                        background: "#FFFFFF",
+                        height: "auto",
+                        objectFit: "contain",
                     }}
                 />
             </div>
@@ -102,32 +138,38 @@ export default function Sidebar() {
                 <SidebarLink
                     to="/overview"
                     label="Overview"
-                    iconColor="#277C78"
                     isActive={pathname === "/overview" || pathname === "/"}
+                    icon={homeIcon}
+                    activeIcon={homeClickIcon}
                 />
+
                 <SidebarLink
                     to="/transactions"
                     label="Transactions"
-                    iconColor="#B3B3B3"
                     isActive={pathname === "/transactions"}
+                    icon={transactionsIcon}
+                    activeIcon={transactionsClickIcon}
                 />
+
                 <SidebarLink
                     to="/budgets"
                     label="Budgets"
-                    iconColor="#B3B3B3"
                     isActive={pathname === "/budgets"}
+                    icon={budgetsIcon}
                 />
+
                 <SidebarLink
                     to="/pots"
                     label="Pots"
-                    iconColor="#B3B3B3"
                     isActive={pathname === "/pots"}
+                    icon={potsIcon}
                 />
+
                 <SidebarLink
                     to="/bills"
                     label="Recurring Bills"
-                    iconColor="#B3B3B3"
                     isActive={pathname === "/bills"}
+                    icon={recurringIcon}
                 />
             </div>
         </aside>

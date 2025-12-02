@@ -1,5 +1,6 @@
 // src/components/pots/PotsSummary.jsx
 import React from "react";
+import potsBigIcon from "../../assets/pots_big.png";
 
 export default function PotsSummary() {
     return (
@@ -97,10 +98,23 @@ export default function PotsSummary() {
                         style={{
                             width: 40,
                             height: 40,
-                            background: "#277C78",
                             borderRadius: 8,
+                            position: "relative",   // ⭐ 반드시 필요!
+                            overflow: "hidden",     // 이미지 넘침 방지
                         }}
-                    />
+                    >
+                        <img
+                            src={potsBigIcon}
+                            alt=""
+                            style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)", // 정중앙 배치
+                            }}
+                        />
+                    </div>
+
                     <div
                         style={{
                             display: "flex",
@@ -145,7 +159,7 @@ export default function PotsSummary() {
                             gap: 16,
                         }}
                     >
-                        {/* Savings */}
+                    {/* Savings */}
                         <PotItem
                             color="#277C78"
                             label="Savings"
