@@ -28,7 +28,7 @@ const pillButtonBase = {
     gap: 8,
 };
 
-const pageSize = 5;
+const pageSize = 8;
 
 const SORT_OPTIONS = [
     { value: "latest", label: "Latest" },
@@ -95,7 +95,9 @@ export default function TransactionsPage() {
         return list;
     }, [search, sortBy, category]);
 
-    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const naturalPages = Math.ceil(filtered.length / pageSize) || 1;
+    const totalPages = Math.max(5, naturalPages);
+
     const safePage = Math.min(currentPage, totalPages);
 
     const startIndex = (safePage - 1) * pageSize;
@@ -124,10 +126,13 @@ export default function TransactionsPage() {
         <DashboardLayout activeMenu="transactions">
             <div
                 style={{
-                    padding: 32,
+                    padding: 40,
                     display: "flex",
                     flexDirection: "column",
-                    gap: 24,
+                    gap: 20,
+                    maxWidth: 1110,
+                    margin: "0 auto",
+                    width: "100%",
                 }}
             >
                 {/* 페이지 타이틀 */}
@@ -294,13 +299,14 @@ export default function TransactionsPage() {
                     {/* 테이블 헤더 */}
                     <div
                         style={{
-                            marginTop: 8,
-                            padding: "12px 16px",
+                            marginTop: 4,
+                            padding: "0px 16px",
                             borderBottom: "1px solid #F2F2F2",
                             display: "flex",
                             gap: 32,
                             color: "#696868",
                             fontSize: 12,
+                            lineHeight: "16px"
                         }}
                     >
                         <div style={{ flex: 1 }}>Recipient / Sender</div>
@@ -321,7 +327,7 @@ export default function TransactionsPage() {
                             <div key={tx.id}>
                                 <div
                                     style={{
-                                        padding: "16px 16px",
+                                        padding: "13px 16px",
                                         display: "flex",
                                         gap: 32,
                                         alignItems: "center",
