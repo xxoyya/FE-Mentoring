@@ -306,7 +306,8 @@ export default function TransactionsPage() {
                             gap: 32,
                             color: "#696868",
                             fontSize: 12,
-                            lineHeight: "16px"
+                            lineHeight: "16px",
+                            height: "20px"
                         }}
                     >
                         <div style={{ flex: 1 }}>Recipient / Sender</div>
