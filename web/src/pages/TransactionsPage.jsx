@@ -141,13 +141,14 @@ export default function TransactionsPage() {
                         fontSize: 32,
                         fontWeight: 700,
                         color: "#201F24",
+                        marginTop: "-6px"
                     }}
                 >
                     Transactions
                 </h1>
 
                 {/* 검색 + 필터 + 테이블 + 페이지네이션 */}
-                <div style={{ ...cardStyle, padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
+                <div style={{...cardStyle, padding: 32, display: "flex", flexDirection: "column", gap: 24}}>
                     {/* 검색 + 필터 바 */}
                     <div
                         style={{
@@ -158,7 +159,7 @@ export default function TransactionsPage() {
                         }}
                     >
                         {/* 검색창 */}
-                        <div style={{ width: 320 }}>
+                        <div style={{width: 320}}>
                             <div style={labelStyle}>Search</div>
                             <div
                                 style={{
@@ -184,7 +185,7 @@ export default function TransactionsPage() {
                                         fontFamily: "Public Sans",
                                     }}
                                 />
-                                <span style={{ fontSize: 16 }}>🔍</span>
+                                <span style={{fontSize: 16}}>🔍</span>
                             </div>
                         </div>
 
@@ -198,8 +199,8 @@ export default function TransactionsPage() {
                             }}
                         >
                             {/* Sort by */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
-                                <span style={{ fontSize: 14, color: "#696868" }}>Sort by</span>
+                            <div style={{display: "flex", alignItems: "center", gap: 8, position: "relative"}}>
+                                <span style={{fontSize: 14, color: "#696868"}}>Sort by</span>
                                 <button
                                     type="button"
                                     style={pillButtonBase}
@@ -248,8 +249,8 @@ export default function TransactionsPage() {
                             </div>
 
                             {/* Category */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
-                                <span style={{ fontSize: 14, color: "#696868" }}>Category</span>
+                            <div style={{display: "flex", alignItems: "center", gap: 8, position: "relative"}}>
+                                <span style={{fontSize: 14, color: "#696868"}}>Category</span>
                                 <button
                                     type="button"
                                     style={pillButtonBase}
@@ -299,22 +300,30 @@ export default function TransactionsPage() {
                     {/* 테이블 헤더 */}
                     <div
                         style={{
-                            marginTop: 4,
+                            marginTop: 14,
                             padding: "0px 16px",
-                            borderBottom: "1px solid #F2F2F2",
+                            // borderBottom: "1px solid #F2F2F2",
                             display: "flex",
                             gap: 32,
                             color: "#696868",
                             fontSize: 12,
-                            lineHeight: "16px",
-                            height: "20px"
+                            lineHeight: "0px",
+                            height: "0px"
                         }}
                     >
-                        <div style={{ flex: 1 }}>Recipient / Sender</div>
-                        <div style={{ width: 120 }}>Category</div>
-                        <div style={{ width: 120 }}>Transaction Date</div>
-                        <div style={{ width: 200, textAlign: "right" }}>Amount</div>
+                        <div style={{flex: 1}}>Recipient / Sender</div>
+                        <div style={{width: 120}}>Category</div>
+                        <div style={{width: 120}}>Transaction Date</div>
+                        <div style={{width: 200, textAlign: "right"}}>Amount</div>
                     </div>
+
+                    <div
+                        style={{
+                            height: 1,
+                            background: "#F2F2F2",
+                            margin: "-4px 16px 0px 16px",
+                        }}
+                    />
 
                     {/* 데이터 행들 */}
                     <div
@@ -328,10 +337,11 @@ export default function TransactionsPage() {
                             <div key={tx.id}>
                                 <div
                                     style={{
-                                        padding: "13px 16px",
+                                        padding: `${idx === 0 ? 0 : 13}px 16px 13px 16px`,
                                         display: "flex",
                                         gap: 32,
                                         alignItems: "center",
+                                        marginTop: idx === 0 ? "-8px" : "0px"
                                     }}
                                 >
                                     {/* 이름 + 아바타 */}
@@ -444,11 +454,11 @@ export default function TransactionsPage() {
                             }
                             disabled={safePage === 1}
                         >
-                            <span style={{ transform: "rotate(180deg)" }}>▶</span>
+                            <span style={{transform: "rotate(180deg)"}}>▶</span>
                             <span>Prev</span>
                         </button>
 
-                        <div style={{ display: "flex", gap: 8 }}>
+                        <div style={{display: "flex", gap: 8}}>
                             {pageNumbers.map((n) => (
                                 <button
                                     key={n}
